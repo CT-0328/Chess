@@ -20,7 +20,7 @@ public class Chessboard : MonoBehaviour
 
   private void Awake()
   {
-    GenerateAllTiles(1, TILE_COUNT_X, TILE_COUNT_Y);
+    GenerateAllTiles(tileSize, TILE_COUNT_X, TILE_COUNT_Y);
   }
 
   // Check if we're hovering over a tile

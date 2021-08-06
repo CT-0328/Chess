@@ -330,14 +330,14 @@
 -r:"Library/Bee/artifacts/200b0aE.dag/UnityEditor.UI.ref.dll"
 -r:"Library/Bee/artifacts/200b0aE.dag/UnityEngine.UI.ref.dll"
 -r:"Library/Bee/artifacts/200b0aE.dag/VSSettingsProvider.ref.dll"
-"Assets/Scripts/Bishop.cs"
 "Assets/Scripts/Chessboard.cs"
-"Assets/Scripts/GameManager.cs"
-"Assets/Scripts/King.cs"
-"Assets/Scripts/Knight.cs"
-"Assets/Scripts/Pawn.cs"
-"Assets/Scripts/Queen.cs"
-"Assets/Scripts/Rook.cs"
+"Assets/Scripts/ChessPieces/Bishop.cs"
+"Assets/Scripts/ChessPieces/ChessPiece.cs"
+"Assets/Scripts/ChessPieces/King.cs"
+"Assets/Scripts/ChessPieces/Knight.cs"
+"Assets/Scripts/ChessPieces/Pawn.cs"
+"Assets/Scripts/ChessPieces/Queen.cs"
+"Assets/Scripts/ChessPieces/Rook.cs"
 -langversion:8.0
 
 /deterministic
