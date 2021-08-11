@@ -16,6 +16,7 @@ public class Chessboard : MonoBehaviour
 
   // Logic
   private ChessPiece[,] chessPieces;
+  private ChessPiece currentlyDragging;
   private const int TILE_COUNT_X = 8;
   private const int TILE_COUNT_Y = 8;
   private GameObject[,] tiles;
@@ -43,7 +44,7 @@ public class Chessboard : MonoBehaviour
     Ray ray = currentCamera.ScreenPointToRay(Input.mousePosition);
     if (Physics.Raycast(ray, out info, 100, LayerMask.GetMask("Tile", "Hover")))
     {
-      // Get the indexes of the tile i've hit
+      // Get the indexes of the tile I've hit
       Vector2Int hitPosition = LookUpTileIndex(info.transform.gameObject);
 
         // If we're hovering over a tile after not over hovering any tiles
@@ -60,14 +61,40 @@ public class Chessboard : MonoBehaviour
           currentHover = hitPosition;
           tiles[hitPosition.x, hitPosition.y].layer = LayerMask.NameToLayer("Hover");
         }
-        // else
-        // {
-        //   if (currentHover != -Vector2Int.one)
-        //   {
-        //     tiles[currentHover.x, currentHover.y].layer = LayerMask.NameToLayer("Tile");
-        //     currentHover = -Vector2Int.one;
-        //   }
-        // }
+
+        // If we press the mouse button
+        if(Input.GetMouseButtonDown(0))
+        {
+          if(chessPieces[hitPosition.x, hitPosition.y] != null)
+          {
+            // Is it our turn?
+            if (true)
+            {
+              currentlyDragging = chessPieces[hitPosition.x, hitPosition.y];
+            }
+          }
+        }
+
+        // If we release the mouse button
+        if(currentlyDragging != null && Input.GetMouseButtonUp(0))
+        {
+          Vector2Int previousPosition = new Vector2Int(currentlyDragging.currentX, currentlyDragging.currentY);
+
+          bool validMove = MoveTo(currentlyDragging, hitPosition.x, hitPosition.y);
+          if(!validMove)
+          {
+            currentlyDragging.SetPosition(GetTileCenter(previousPosition.x, previousPosition.y));
+            currentlyDragging = null;
+          }
+        }
+      }
+      else
+      {
+        if (currentHover != -Vector2Int.one)
+        {
+          tiles[currentHover.x, currentHover.y].layer = LayerMask.NameToLayer("Tile");
+          currentHover = -Vector2Int.one;
+        }
       }
     }
 
@@ -165,14 +192,35 @@ public class Chessboard : MonoBehaviour
   {
     chessPieces[x, y].currentX = x;
     chessPieces[x, y].currentY = y;
-    chessPieces[x, y].transform.position = GetTileCenter(x, y);
+    chessPieces[x, y].SetPosition(GetTileCenter(x, y), force);
   }
+
   private Vector3 GetTileCenter(int x, int y)
   {
     return new Vector3(x * tileSize, yOffset, y * tileSize) - bounds + new Vector3(tileSize / 2, 0, tileSize / 2);
   }
 
   // Operations
+  private bool MoveTo(ChessPiece cp, int x, int y)
+  {
+    Vector2Int previousPosition = new Vector2Int(cp.currentX, cp.currentY);
+
+    if(chessPieces[x, y] != null)
+    {
+      ChessPiece ocp = chessPieces[x, y];
+
+      if(cp.team == ocp.team)
+        return false;
+    }
+
+    chessPieces[x, y] = cp;
+    chessPieces[previousPosition.x, previousPosition.y] = null;
+
+    PositionSinglePiece(x, y);
+
+    return true;
+  }
+
   private Vector2Int LookUpTileIndex(GameObject hitInfo)
   {
     for (int x = 0; x < TILE_COUNT_X; x++)
